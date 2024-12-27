@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
 <meta property="article:published_time" content="2019-06-03T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-22T15:39:58.467Z">
+<meta property="article:modified_time" content="2024-12-26T15:50:03.633Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
@@ -228,7 +228,7 @@
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2024-12-22
+                    本文最後更新於：2024-12-26
                   
                 
               </p>
@@ -454,24 +454,19 @@
 <p>用 List 宣告後，使用物件一律都是呼叫該介面所定義的方法。而不必在意實際上是 ArrayList 或者 LinkedList 在運作。示意如下：</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;
     List&lt;String&gt; arrayList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();
-    arrayList.add(<span class="hljs-string">&quot;A&quot;</span>);
-    arrayList.add(<span class="hljs-string">&quot;B&quot;</span>);
-    process(arrayList);
-
     List&lt;String&gt; linkedList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();
-    arrayList.add(<span class="hljs-string">&quot;C&quot;</span>);
-    arrayList.add(<span class="hljs-string">&quot;D&quot;</span>);
+    process(arrayList);
     process(linkedList);
 &#125;
 
 <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">process</span><span class="hljs-params">(List&lt;String&gt; list)</span> &#123;
-    <span class="hljs-keyword">if</span> (list.isEmpty()) &#123;
-        System.out.println(<span class="hljs-string">&quot;(List is empty.)&quot;</span>);
-        <span class="hljs-keyword">return</span>;
-    &#125;
+    list.add(<span class="hljs-string">&quot;A&quot;</span>);
+    list.add(<span class="hljs-string">&quot;B&quot;</span>);
+    list.add(<span class="hljs-string">&quot;C&quot;</span>);
 
-    <span class="hljs-type">var</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> String.join(<span class="hljs-string">&quot;, &quot;</span>, list);
-    System.out.println(result);
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">var</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; list.size(); i++) &#123;
+        System.out.println(list.get(i));
+    &#125;
 
     list.clear();
 &#125;</code></pre></div>
@@ -541,11 +536,11 @@
 
 <p>上面的 ListProductRepository 需依照介面的規範，完成所有 public 方法。完整的範例程式，請參考文末附上的專案。</p>
 <p>此時專案中存在多個相同介面的元件。由於 Spring Boot 不知道要注入哪一個，所以啟動會失敗，錯誤訊息節錄如下：</p>
-<div class="code-wrapper"><pre><code class="hljs oxygene">Parameter <span class="hljs-number">0</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">constructor</span> <span class="hljs-title function_">in</span> <span class="hljs-title function_">com</span>.<span class="hljs-title function_">example</span>.<span class="hljs-title function_">demo</span>.<span class="hljs-title function_">service</span>.<span class="hljs-title function_">ProductService</span> <span class="hljs-title function_">required</span> <span class="hljs-title function_">a</span> <span class="hljs-title function_">single</span> <span class="hljs-title function_">bean</span>, <span class="hljs-title function_">but</span> 2 <span class="hljs-title function_">were</span> <span class="hljs-title function_">found</span>:
+<div class="code-wrapper"><pre><code class="hljs text">Parameter 0 of constructor in com.example.demo.service.ProductService required a single bean, but 2 were found:
     - listProductRepository: ...
     - mapProductRepository: ...
 ...
-Consider marking one <span class="hljs-keyword">of</span> the beans <span class="hljs-keyword">as</span> @Primary, updating the consumer <span class="hljs-keyword">to</span> accept multiple beans, <span class="hljs-keyword">or</span> <span class="hljs-keyword">using</span> @Qualifier <span class="hljs-keyword">to</span> identify the bean that should be consumed</code></pre></div>
+Consider marking one of the beans as @Primary, updating the consumer to accept multiple beans, or using @Qualifier to identify the bean that should be consumed</code></pre></div>
 
 <p>為了告訴 Spring Boot 要注入哪一個元件，我們可在其中一個類別冠上 <code>@Primary</code> 注解。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
@@ -630,9 +625,9 @@ Consider marking one <span class="hljs-keyword">of</span> the beans <span class=
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/articles/azure-create-mysql-flexible-server/" title="在 Azure 上建立 MySQL 資料庫，並進行連線">
+                      <a href="/articles/spring-boot-application-properties-configuration/" title="【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">在 Azure 上建立 MySQL 資料庫，並進行連線</span>
+                        <span class="hidden-mobile">【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -679,7 +674,7 @@ Consider marking one <span class="hljs-keyword">of</span> the beans <span class=
         aria-expanded="true"
       >
         Spring Boot
-        <span class="list-group-count">(6)</span>
+        <span class="list-group-count">(7)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -690,6 +685,15 @@ Consider marking one <span class="hljs-keyword">of</span> the beans <span class=
           
   <div class="category-post-list">
     
+    
+      
+      
+        <a href="/articles/spring-boot-application-properties-configuration/" title="【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）</span>
+        </a>
+      
     
       
       
