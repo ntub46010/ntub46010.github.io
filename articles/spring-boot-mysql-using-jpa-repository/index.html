@@ -19,23 +19,23 @@
   <meta name="author" content="Vincent Zheng">
   <meta name="keywords" content="">
   
-    <meta name="description" content="準備好 MongoDB 的環境後，就能在 Spring Boot 中存取資料庫了。本文將介紹「Spring Data」這款框架，建立 ORM &#x2F; ODM 的概念。隨後透過「MongoRepository」內建的 CRUD 方法，存取資料庫。">
+    <meta name="description" content="為了在 Spring Boot 專案中存取 MySQL 資料庫，我們可借助 Spring Data JPA 提供的 repository 介面。本文除了透過內建的 CRUD 方法進行存取，也會設計自己的查詢條件，包含透過方法名稱及原生語法。最後說明如何排序與分頁。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作">
-<meta property="og:url" content="https://ntub46010.github.io/articles/spring-boot-data-mongodb-repository-crud/">
+<meta property="og:title" content="【Spring Boot】第10.3課－使用 JPA Repository 存取 MySQL 資料庫">
+<meta property="og:url" content="https://ntub46010.github.io/articles/spring-boot-mysql-using-jpa-repository/">
 <meta property="og:site_name" content="吉古拉的程式拾光">
-<meta property="og:description" content="準備好 MongoDB 的環境後，就能在 Spring Boot 中存取資料庫了。本文將介紹「Spring Data」這款框架，建立 ORM &#x2F; ODM 的概念。隨後透過「MongoRepository」內建的 CRUD 方法，存取資料庫。">
+<meta property="og:description" content="為了在 Spring Boot 專案中存取 MySQL 資料庫，我們可借助 Spring Data JPA 提供的 repository 介面。本文除了透過內建的 CRUD 方法進行存取，也會設計自己的查詢條件，包含透過方法名稱及原生語法。最後說明如何排序與分頁。">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
-<meta property="article:published_time" content="2019-07-06T17:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-01T15:34:47.088Z">
+<meta property="article:published_time" content="2024-05-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-05T08:13:47.655Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
   
   
   
-  <title>【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作 | 吉古拉的程式拾光</title>
+  <title>【Spring Boot】第10.3課－使用 JPA Repository 存取 MySQL 資料庫 | 吉古拉的程式拾光</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -161,7 +161,7 @@
         
           <div class="h2">
             
-              <span id="subtitle">【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作</span>
+              <span id="subtitle">【Spring Boot】第10.3課－使用 JPA Repository 存取 MySQL 資料庫</span>
             
           </div>
         
@@ -223,12 +223,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作</h1>
+            <h1 id="seo-header">【Spring Boot】第10.3課－使用 JPA Repository 存取 MySQL 資料庫</h1>
             
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2025-01-01
+                    本文最後更新於：2025-01-05
                   
                 
               </p>
@@ -236,106 +236,101 @@
             
               <div class="markdown-body">
                 
-                <p>準備好 MongoDB 的環境後，就能在 Spring Boot 中存取資料庫了。本文首先會展示要儲存的資料內容，接著介紹「Spring Data」框架的特色。</p>
-<p>隨後透過「MongoRepository」內建的 CRUD 方法存取資料庫，而下一篇才會介紹自定義查詢條件的方式。</p>
+                <p>為了在 Spring Boot 專案中存取 MySQL 資料庫，我們可借助 Spring Data JPA 框架所提供的 repository 介面。</p>
+<p>本文除了透過內建的 CRUD 方法進行存取，也會設計自己的查詢條件，包含透過方法名稱及原生語法。最後說明如何排序與分頁。</p>
 <hr>
-<p>本文的練習用專案，請<a target="_blank" rel="noopener" href="https://github.com/ntub46010/SpringBootTutorial/tree/Ch7-1">點我</a>。</p>
-<h2 id="一、資料類別"><a href="#一、資料類別" class="headerlink" title="一、資料類別"></a>一、資料類別</h2><p>以下是自定義的類別，叫做「Student」，用來描述學生資料。</p>
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Document(collection = &quot;student&quot;)</span>
+<p>本文的練習用專案，請<a target="_blank" rel="noopener" href="https://github.com/ntub46010/SpringBootTutorial/tree/Ch8-2">點我</a>。</p>
+<h2 id="一、實體類別介紹"><a href="#一、實體類別介紹" class="headerlink" title="一、實體類別介紹"></a>一、實體類別介紹</h2><p>讓我們快速回顧上一篇的實體類別。以下的「Student」類別描述了學生資料，會儲存到資料庫中。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Entity</span>
+<span class="hljs-meta">@Table(name = &quot;student&quot;)</span>
+<span class="hljs-meta">@EntityListeners(AuditingEntityListener.class)</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Student</span> &#123;
 
     <span class="hljs-meta">@Id</span>
-    <span class="hljs-keyword">private</span> String id;
-    <span class="hljs-keyword">private</span> String name;
-    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> grade;
-    <span class="hljs-keyword">private</span> LocalDate birthday;
-    <span class="hljs-keyword">private</span> Contact contact;
-    <span class="hljs-keyword">private</span> List&lt;Certificate&gt; certificates;
+    <span class="hljs-meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span>
+    <span class="hljs-keyword">private</span> Long id;
     
+    <span class="hljs-meta">@Column(name = &quot;grade&quot;)</span>
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> grade;
+
+    <span class="hljs-meta">@Column(name = &quot;blood_type&quot;)</span>
+    <span class="hljs-meta">@Enumerated(EnumType.STRING)</span>
+    <span class="hljs-keyword">private</span> BloodType bloodType;
+
+    <span class="hljs-meta">@Column(name = &quot;birthday&quot;, nullable = false)</span>
+    <span class="hljs-keyword">private</span> LocalDate birthday;
+    
+    <span class="hljs-meta">@Enumerated(EnumType.STRING)</span>
+    <span class="hljs-keyword">private</span> BloodType bloodType;
+    
+    <span class="hljs-meta">@Embedded</span>
+    <span class="hljs-meta">@AttributeOverride(name = &quot;email&quot;, column = @Column(name = &quot;contact_email&quot;))</span>
+    <span class="hljs-meta">@AttributeOverride(name = &quot;phone&quot;, column = @Column(name = &quot;contact_phone&quot;))</span>
+    <span class="hljs-keyword">private</span> Contact contact;
+    
+    <span class="hljs-meta">@CreatedDate</span>
+    <span class="hljs-keyword">private</span> LocalDateTime createdTime;
+
+    <span class="hljs-meta">@LastModifiedDate</span>
+    <span class="hljs-keyword">private</span> LocalDateTime updatedTime;
+
+    <span class="hljs-meta">@CreatedBy</span>
+    <span class="hljs-keyword">private</span> String createdBy;
+
+    <span class="hljs-meta">@LastModifiedBy</span>
+    <span class="hljs-keyword">private</span> String updatedBy;
+
     <span class="hljs-comment">// getter, setter ...</span>
 &#125;</code></pre></div>
 
-<p>這個類別冠上了 <code>@Document</code> 注解，代表它是資料庫中的「文件」。並透過 <code>collection</code> 參數，指定「集合」的名稱。參數請不要誤寫成「collation」了。</p>
-<p>類別中包含 id、名字、年級、生日、聯繫方式與證照，共 6 個欄位。其中 id 欄位冠上了 <code>@Id</code> 注解，代表它在資料庫中對應到文件的主鍵欄位。</p>
+<p>以下的「BloodType」是個列舉類別，包含 4 種血型。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">BloodType</span> &#123;
+    A, B, O, AB
+&#125;</code></pre></div>
+
 <p>以下的「Contact」類別是描述聯繫方式，包含信箱與電話這 2 個欄位。</p>
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Contact</span> &#123;
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Embeddable</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Contact</span> &#123;
     <span class="hljs-keyword">private</span> String email;
     <span class="hljs-keyword">private</span> String phone;
 
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Contact <span class="hljs-title function_">of</span><span class="hljs-params">(String email, String phone)</span> &#123;
-        <span class="hljs-type">var</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Contact</span>();
-        c.email = email;
-        c.phone = phone;
-        <span class="hljs-keyword">return</span> c;
-    &#125;
-
     <span class="hljs-comment">// getter, setter ...</span>
 &#125;</code></pre></div>
 
-<p>以下的「Certificate」類別是描述證照，包含種類、分數與等級這 3 個欄位。</p>
-<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Certificate</span> &#123;
-    <span class="hljs-keyword">private</span> String type;
-    <span class="hljs-keyword">private</span> Integer score;
-    <span class="hljs-keyword">private</span> String level;
+<p>以下是上一篇提到的 <code>AuditorAware</code> 元件。用途是在插入或更新資料時，自動在實體類別中具有 <code>@CreatedBy</code> 或 <code>@LastModifiedBy</code> 注解的欄位，填入使用者資訊，此處以隨機字串代替。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AuditorAwareImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">AuditorAware</span>&lt;String&gt; &#123;
 
-    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Certificate <span class="hljs-title function_">of</span><span class="hljs-params">(String type, Integer score, String level)</span> &#123;
-        <span class="hljs-type">var</span> <span class="hljs-variable">c</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Certificate</span>();
-        c.type = type;
-        c.score = score;
-        c.level = level;
-        <span class="hljs-keyword">return</span> c;
+    <span class="hljs-meta">@Override</span>
+    <span class="hljs-keyword">public</span> Optional&lt;String&gt; <span class="hljs-title function_">getCurrentAuditor</span><span class="hljs-params">()</span> &#123;
+        <span class="hljs-type">String</span> <span class="hljs-variable">randomId</span> <span class="hljs-operator">=</span> UUID.randomUUID().toString();
+        <span class="hljs-keyword">return</span> Optional.of(randomId);
     &#125;
-
-    <span class="hljs-comment">// getter, setter ...</span>
 &#125;</code></pre></div>
 
-<p>本文會將 Student 類別的物件，儲存到 MongoDB 資料庫。</p>
-<h2 id="二、認識-Spring-Data-框架"><a href="#二、認識-Spring-Data-框架" class="headerlink" title="二、認識 Spring Data 框架"></a>二、認識 Spring Data 框架</h2><h3 id="（一）建立-Repository-介面"><a href="#（一）建立-Repository-介面" class="headerlink" title="（一）建立 Repository 介面"></a>（一）建立 Repository 介面</h3><p>如果讀者有用過 JDBC（Java Database Connectivity），應該對存取資料庫的程式流程還留有一點印象，大致包含以下步驟：</p>
-<ol>
-<li>建立資料庫連線。</li>
-<li>撰寫原生 SQL 語法。</li>
-<li>將查詢結果（Result Set），轉換成商業邏輯要用的程式物件。</li>
-<li>釋放資源。</li>
-</ol>
-<p>由於太過繁瑣，於是「Spring Data」這套框架封裝了此過程，讓開發者能更輕鬆地存取資料庫。上一篇在 pom.xml 檔案中添加的「spring-boot-starter-data-mongodb」依賴，就是 Spring Data 的產品之一。</p>
-<div class="code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
-    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-mongodb<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
-<span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span></code></pre></div>
-
-<p>在第 6 課，我們有練習建立一個「ProductRepository」介面，將其注入到商業邏輯中。該介面有 2 種實作類別，分別用 List 與 Map 結構來儲存測試資料。</p>
-<p>本節會建立一個特殊的介面，定位與上述的 ProductRepository 相同。但我們不必親自實作它，而是交給框架處理。</p>
+<h2 id="二、認識-Spring-Data-的-Repository-介面"><a href="#二、認識-Spring-Data-的-Repository-介面" class="headerlink" title="二、認識 Spring Data 的 Repository 介面"></a>二、認識 Spring Data 的 Repository 介面</h2><h3 id="（一）建立-Repository-介面"><a href="#（一）建立-Repository-介面" class="headerlink" title="（一）建立 Repository 介面"></a>（一）建立 Repository 介面</h3><p>在第 6 課，我們有練習過建立一個「ProductRepository」介面，將其注入到商業邏輯中。還提供兩種實作類別，分別用 List 與 Map 結構來儲存範例資料。</p>
+<p>本節會使用一個特殊的介面，它是由 Spring Data JPA 所提供，其定位與上述的 ProductRepository 相同。但我們不必親自實作它，而是交給框架處理。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
-<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">MongoRepository</span>&lt;Student, String&gt; &#123;
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
 &#125;</code></pre></div>
 
-<p>這個「StudentRepository」介面繼承了 <code>MongoRepository</code> 介面，且傳入兩個泛型類別，分別是文件與主鍵的類別。其中主鍵的類別，必須與上述 Student 資料類別中的 id 欄位相同。</p>
+<p>我們建立了叫做「StudentRepository」的介面，並繼承 <code>JpaRepository</code> 介面。繼承時，需在泛型分別傳入實體類別與主鍵類別。</p>
 <h3 id="（二）查詢語法與物件對映"><a href="#（二）查詢語法與物件對映" class="headerlink" title="（二）查詢語法與物件對映"></a>（二）查詢語法與物件對映</h3><p>使用 Spring Data 時，我們最直接感受到的好處，就是「產生查詢語法」與「物件對映」。</p>
-<p>在 <code>MongoRepository</code> 介面，以及它的父介面中，已經有內建一些基本方法。舉例來說，我們可以將 Student 物件傳入 repository 的 <code>insert</code> 方法。</p>
-<p>僅僅一句程式，Spring Data 就會產生如下的 MongoDB 操作：</p>
-<div class="code-wrapper"><pre><code class="hljs javascript">db.<span class="hljs-property">student</span>.<span class="hljs-title function_">insert</span>(
-    &#123;
-        <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Vincent&quot;</span>,
-        <span class="hljs-string">&quot;grade&quot;</span>: <span class="hljs-number">2</span>
-        <span class="hljs-string">&quot;contact&quot;</span>: &#123;
-            <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;vincent@school.com&quot;</span>,
-            <span class="hljs-string">&quot;phone&quot;</span>: <span class="hljs-string">&quot;0911111111&quot;</span>
-        &#125;
-    &#125;
-);</code></pre></div>
+<p>在 <code>JpaRepository</code> 介面，以及它的父介面中，已經有內建一些基本方法。舉例來說，我們可以將 Student 物件傳入 repository 的 <code>save</code> 方法。</p>
+<p>僅僅一個方法呼叫，Spring Data 就會產生類似下面的 MySQL 指令：</p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `student` (`name`, `grade`, `blood_type`, `birthday`)
+<span class="hljs-keyword">VALUE</span> (&quot;Vincent&quot;, <span class="hljs-number">4</span>, &quot;A&quot;, &quot;1996-01-01&quot;);</code></pre></div>
 
-<p>此時該方法會回傳插入成功的文件資料，且包含由 MongoDB 產生的 id。</p>
-<p>又或者是呼叫 <code>findById</code> 方法，則會產生如下的操作：</p>
-<div class="code-wrapper"><pre><code class="hljs javascript">db.<span class="hljs-property">student</span>.<span class="hljs-title function_">find</span>(
-    &#123;
-        <span class="hljs-string">&quot;_id&quot;</span>: <span class="hljs-title class_">ObjectId</span>(<span class="hljs-string">&quot;...&quot;</span>)
-    &#125;
-);</code></pre></div>
+<p>此時該方法會回傳插入成功的資料，且包含由 MySQL 產生的 id。</p>
+<p>又或者是呼叫 <code>findById</code> 方法，則會產生如下的指令：</p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span> `student`
+<span class="hljs-keyword">WHERE</span> `id` <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;</code></pre></div>
 
-<p>此時該方法除了回傳符合條件的結果，更重要的是文件資料會被轉換成 Java 物件，也就是 Student。</p>
-<p>資料庫中的資料，與程式物件互相轉換，這項技術在關聯式資料庫稱為「物件關聯對映」（Object-Relational Mapping，ORM）。而在 MongoDB 則稱為「物件文件對映」（Object-Document Mapping，ODM）。</p>
-<p>從上面這兩個例子，我們可看出 Spring Data 會解讀 repository 的方法定義，產生對應的資料庫語法。而在下一篇，讀者也能依照命名規則，設計出自己的查詢方法，讓操作更簡單。</p>
-<h2 id="三、使用-MongoRepository"><a href="#三、使用-MongoRepository" class="headerlink" title="三、使用 MongoRepository"></a>三、使用 MongoRepository</h2><p>本節讓我們來實際使用 <code>MongoRepository</code> 提供的內建方法。</p>
+<p>此時該方法除了回傳符合條件的結果，更重要的是資料會被轉換成 Java 物件，也就是 Student。資料庫中的資料，與程式物件互相轉換，這項技術在關聯式資料庫稱為「物件關聯對映」（Object-Relational Mapping，ORM）。</p>
+<p>從上面這兩個例子，我們可看出 Spring Data 會解讀 repository 的方法名稱、傳入參數，以及回傳值型態，產生對應的資料庫語法。</p>
+<p>這段過程是透過底層的 ORM 框架來完成，Spring Data JPA 預設是採用「Hibernate」。</p>
+<h2 id="三、使用-JPA-Repository-進行-CRUD"><a href="#三、使用-JPA-Repository-進行-CRUD" class="headerlink" title="三、使用 JPA Repository 進行 CRUD"></a>三、使用 JPA Repository 進行 CRUD</h2><p>本節讓我們來實際使用 JPA Repository 提供的內建方法。</p>
 <p>為了在程式中有地方呼叫 StudentRepository，讀者可在 Controller 準備 API，屆時便能搭配如 Postman 之類的工具，對後端發送 request。</p>
 <h3 id="（一）插入資料"><a href="#（一）插入資料" class="headerlink" title="（一）插入資料"></a>（一）插入資料</h3><p>以下提供一支 API，用來建立學生資料。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
@@ -343,11 +338,11 @@
 
     <span class="hljs-meta">@Autowired</span>
     <span class="hljs-keyword">private</span> StudentRepository studentRepository;
-    
+
     <span class="hljs-meta">@PostMapping(&quot;/students&quot;)</span>
     <span class="hljs-keyword">public</span> ResponseEntity&lt;Void&gt; <span class="hljs-title function_">createStudent</span><span class="hljs-params">(<span class="hljs-meta">@RequestBody</span> Student student)</span> &#123;
         student.setId(<span class="hljs-literal">null</span>);
-        studentRepository.insert(student);
+        studentRepository.save(student);
 
         <span class="hljs-type">URI</span> <span class="hljs-variable">uri</span> <span class="hljs-operator">=</span> ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
@@ -358,17 +353,18 @@
     &#125;
 &#125;</code></pre></div>
 
-<p>呼叫 <code>insert</code> 方法即可插入資料。若該資料沒有 id 的值，則 MongoDB 將自行產生。若 id 發生重複，則會拋出 <code>DuplicatedKeyException</code> 例外。</p>
-<p>該方法最後會回傳含有 id 的資料，此處組出 <code>URI</code>，附加到 response header，讓 API 回傳。</p>
-<h3 id="（二）取得資料"><a href="#（二）取得資料" class="headerlink" title="（二）取得資料"></a>（二）取得資料</h3><p>以下是查詢指定 id 的資料，呼叫 findById 方法即可。</p>
+<p>呼叫 repository 的 <code>save</code> 方法即可。若 Student 物件的 id 欄位值是 null，則視為插入。反之則視為更新。</p>
+<p>插入資料時，一律由 MySQL 自行產生 id 值，我們無法自行給定。該方法最後會回傳含有 id 的資料，此處附加到 response header 中，讓 API 回傳。</p>
+<p>此時讀者也可順道確認一下，Spring Data JPA 是否有自動在 createdTime、updatedTime、createdBy 與 updatedBy 欄位填入值。</p>
+<h3 id="（二）取得資料"><a href="#（二）取得資料" class="headerlink" title="（二）取得資料"></a>（二）取得資料</h3><p>以下是查詢指定 id 的資料，呼叫 <code>findById</code> 方法即可。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
 
     <span class="hljs-meta">@Autowired</span>
     <span class="hljs-keyword">private</span> StudentRepository studentRepository;
-        
+
     <span class="hljs-meta">@GetMapping(&quot;/students/&#123;id&#125;&quot;)</span>
-    <span class="hljs-keyword">public</span> ResponseEntity&lt;Student&gt; <span class="hljs-title function_">getStudent</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> String id)</span> &#123;
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;Student&gt; <span class="hljs-title function_">getStudent</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> Long id)</span> &#123;
         Optional&lt;Student&gt; studentOp = studentRepository.findById(id);
         <span class="hljs-keyword">return</span> studentOp.isPresent()
                 ? ResponseEntity.ok(studentOp.get())
@@ -376,7 +372,7 @@
     &#125;
 &#125;</code></pre></div>
 
-<p>以下是給予 List，查詢多筆指定 id 的資料。呼叫 <code>findAllById</code> 方法即可。</p>
+<p>以下是給予字串 List，查詢多筆指定 id 的資料。呼叫 <code>findAllById</code> 方法即可。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
 
@@ -384,7 +380,7 @@
     <span class="hljs-keyword">private</span> StudentRepository studentRepository;
         
     <span class="hljs-meta">@GetMapping(&quot;/students/ids&quot;)</span>
-    <span class="hljs-keyword">public</span> ResponseEntity&lt;List&lt;Student&gt;&gt; <span class="hljs-title function_">getStudents</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam</span> List&lt;String&gt; idList)</span> &#123;
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;List&lt;Student&gt;&gt; <span class="hljs-title function_">getStudents</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam</span> List&lt;Long&gt; idList)</span> &#123;
         List&lt;Student&gt; students = studentRepository.findAllById(idList);
         <span class="hljs-keyword">return</span> ResponseEntity.ok(students);
     &#125;
@@ -393,17 +389,16 @@
 <p>攜帶 query string 存取此 API 的方式，示意如下：</p>
 <div class="code-wrapper"><pre><code class="hljs text">GET /students/ids?idList=111,222,333</code></pre></div>
 
-<p>雖然在資料庫中，文件主鍵的欄位名稱為「_id」，且型態是 Object Id，但 MongoDB 會做這部份的轉換，所以讀者不用特別做處理。</p>
 <h3 id="（三）更新資料"><a href="#（三）更新資料" class="headerlink" title="（三）更新資料"></a>（三）更新資料</h3><p>以下是更新指定 id 的資料。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
 
     <span class="hljs-meta">@Autowired</span>
     <span class="hljs-keyword">private</span> StudentRepository studentRepository;
-    
+
     <span class="hljs-meta">@PutMapping(&quot;/students/&#123;id&#125;&quot;)</span>
     <span class="hljs-keyword">public</span> ResponseEntity&lt;Void&gt; <span class="hljs-title function_">updateStudent</span><span class="hljs-params">(</span>
-<span class="hljs-params">            <span class="hljs-meta">@PathVariable</span> String id, <span class="hljs-meta">@RequestBody</span> Student request</span>
+<span class="hljs-params">            <span class="hljs-meta">@PathVariable</span> Long id, <span class="hljs-meta">@RequestBody</span> Student request</span>
 <span class="hljs-params">    )</span> &#123;
         Optional&lt;Student&gt; studentOp = studentRepository.findById(id);
         <span class="hljs-keyword">if</span> (studentOp.isEmpty()) &#123;
@@ -413,17 +408,16 @@
         <span class="hljs-type">Student</span> <span class="hljs-variable">student</span> <span class="hljs-operator">=</span> studentOp.get();
         student.setName(request.getName());
         student.setGrade(request.getGrade());
+        student.setBloodType(request.getBloodType());
         student.setBirthday(request.getBirthday());
         student.setContact(request.getContact());
-        student.setCertificates(request.getCertificates());
         studentRepository.save(student);
 
         <span class="hljs-keyword">return</span> ResponseEntity.noContent().build();
     &#125;
 &#125;</code></pre></div>
 
-<p>在邏輯中，我們先判斷該筆資料是否存在。是的話，就將 request 中的資料更新上去，最後呼叫 <code>save</code> 方法儲存。</p>
-<p>這個 <code>save</code> 方法，其實是「upsert」的性質。也就是說，若 id 所對應的資料存在，便進行覆蓋，否則視為插入新資料。</p>
+<p>在邏輯中，我們先判斷該筆資料是否存在。是的話，就將 request 中的資料更新上去，再呼叫 <code>save</code> 方法儲存。由於呼叫該方法時，table 已有該 id 的資料，因此會執行更新操作，而非插入。</p>
 <h3 id="（四）刪除資料"><a href="#（四）刪除資料" class="headerlink" title="（四）刪除資料"></a>（四）刪除資料</h3><p>以下是刪除指定 id 的資料，呼叫 <code>deleteById</code> 方法即可。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
@@ -432,61 +426,194 @@
     <span class="hljs-keyword">private</span> StudentRepository studentRepository;
 
     <span class="hljs-meta">@DeleteMapping(&quot;/students/&#123;id&#125;&quot;)</span>
-    <span class="hljs-keyword">public</span> ResponseEntity&lt;Void&gt; <span class="hljs-title function_">deleteStudent</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> String id)</span> &#123;
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;Void&gt; <span class="hljs-title function_">deleteStudent</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable</span> Long id)</span> &#123;
         studentRepository.deleteById(id);
         <span class="hljs-keyword">return</span> ResponseEntity.noContent().build();
     &#125;
 &#125;</code></pre></div>
 
-<h2 id="四、測試資料"><a href="#四、測試資料" class="headerlink" title="四、測試資料"></a>四、測試資料</h2><p>以下提供一支 API，用途是在資料庫插入 3 筆測試資料。若讀者有需要，可以先準備起來，方便下一篇的練習，</p>
+<p>其他內建方法尚有 <code>saveAll</code>、<code>deleteAllById</code>、<code>existsById</code>、<code>count</code> 等，讀者可自行探索。</p>
+<h2 id="四、自定義查詢條件"><a href="#四、自定義查詢條件" class="headerlink" title="四、自定義查詢條件"></a>四、自定義查詢條件</h2><p>我們能在 repository 中，依照特定的方法命名規則，設計自己的查詢條件。</p>
+<p>筆者在第 9.3 課已經設計過各種查詢 MongoDB 的方法，以及排序的方式。雖然是另一款資料庫，但 Spring Data 提供的 repository，其使用方式大致都相同。</p>
+<p>本節僅挑選一部份做快速的示範。更多命名方式，讀者可參考 <a target="_blank" rel="noopener" href="https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html">Spring Data JPA 官方文件</a>。</p>
+<h3 id="（一）相等條件"><a href="#（一）相等條件" class="headerlink" title="（一）相等條件"></a>（一）相等條件</h3><p>以下方法是以名字做為查詢條件。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
+    Student <span class="hljs-title function_">findByName</span><span class="hljs-params">(String name)</span>;
+&#125;</code></pre></div>
+
+<p>方法名稱中，在 <code>findBy</code> 關鍵字後面緊接著實體類別的欄位名稱即可。</p>
+<p>以下方法是查詢內部欄位，分別是將聯繫方式的信箱與電話當作條件。只要在方法名稱將欄位的「路徑」寫出即可。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
+    Student <span class="hljs-title function_">findByContactEmail</span><span class="hljs-params">(String email)</span>;
+    Student <span class="hljs-title function_">findByContactPhone</span><span class="hljs-params">(String phone)</span>;
+&#125;</code></pre></div>
+
+<h3 id="（二）範圍條件"><a href="#（二）範圍條件" class="headerlink" title="（二）範圍條件"></a>（二）範圍條件</h3><p>以下 2 個方法，分別是查詢年級大於等於，和小於等於某個值的資料。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
+    List&lt;Student&gt; <span class="hljs-title function_">findByGradeGreaterThanEqual</span><span class="hljs-params">(<span class="hljs-type">int</span> from)</span>;
+    List&lt;Student&gt; <span class="hljs-title function_">findByGradeLessThanEqual</span><span class="hljs-params">(<span class="hljs-type">int</span> to)</span>;
+&#125;</code></pre></div>
+
+<p>數值欄位可使用 <code>GreaterThanEqual</code>、<code>GreaterThan</code>、<code>LessThanEqual</code> 與 <code>LessThan</code> 關鍵字。</p>
+<p>以下 2 個方法，分別是查詢生日在某天之後，和之前的資料。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
+    List&lt;Student&gt; <span class="hljs-title function_">findByBirthdayAfter</span><span class="hljs-params">(LocalDate from)</span>;
+    List&lt;Student&gt; <span class="hljs-title function_">findByBirthdayBefore</span><span class="hljs-params">(LocalDate to)</span>;
+&#125;</code></pre></div>
+
+<p>日期欄位是使用 <code>After</code> 與 <code>Before</code> 關鍵字。</p>
+<h3 id="（三）組合多個條件"><a href="#（三）組合多個條件" class="headerlink" title="（三）組合多個條件"></a>（三）組合多個條件</h3><p>查詢條件可透過 <code>And</code> 或 <code>Or</code> 的邏輯組合起來。</p>
+<p>以下的條件，是聯繫方式的信箱或電話等於參數。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
+    List&lt;Student&gt; <span class="hljs-title function_">findByContactEmailOrContactPhone</span><span class="hljs-params">(String email, String phone)</span>;
+&#125;</code></pre></div>
+
+<h3 id="（四）原生語法"><a href="#（四）原生語法" class="headerlink" title="（四）原生語法"></a>（四）原生語法</h3><p>Spring Data 也支援我們直接撰寫原生語法，而方法可隨意取名。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
+
+    <span class="hljs-meta">@Query(</span>
+<span class="hljs-meta">            nativeQuery = true,</span>
+<span class="hljs-meta">            value = &quot;&quot;&quot;</span>
+<span class="hljs-meta">                SELECT *</span>
+<span class="hljs-meta">                FROM `student`</span>
+<span class="hljs-meta">                WHERE `contact_email` = ?1 OR `contact_phone` = ?2</span>
+<span class="hljs-meta">            &quot;&quot;&quot;</span>
+<span class="hljs-meta">    )</span>
+    List&lt;Student&gt; <span class="hljs-title function_">findByContact</span><span class="hljs-params">(String email, String phone)</span>;
+&#125;</code></pre></div>
+
+<p>使用 <code>@Query</code> 注解，可以用字串的形式提供語法。而當中的「?1」、「?2」等符號，代表要取用方法的第幾個參數（位置從 1 開始算）。並且 <code>nativeQuery</code> 參數需給予 true 值，代表這是原生語法。</p>
+<p>要注意的是，SQL 語法結尾請不要加分號 ;，避免被認為語法有誤。例如上述的「?2」代表第二個參數，但 JPA 會解讀成「?2;」，並認為我們寫錯了，拋出「Ordinal parameter label was not an integer」的例外訊息。</p>
+<p>又或者是本文第五節的排序，假設原生語法寫成 <code>SELECT * FROM student;</code>，則 JPA 會將排序語法直接附加在後，變成：</p>
+<div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span>
+<span class="hljs-keyword">FROM</span> `student`;
+<span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> `grade` <span class="hljs-keyword">ASC</span></code></pre></div>
+
+<p>此時底層的 Hibernate 在執行時，勢必會拋出語法錯誤的例外。</p>
+<h2 id="五、排序與分頁"><a href="#五、排序與分頁" class="headerlink" title="五、排序與分頁"></a>五、排序與分頁</h2><h3 id="（一）排序"><a href="#（一）排序" class="headerlink" title="（一）排序"></a>（一）排序</h3><p>要透過 repository 的方法進行排序，首先得建立 <code>Sort</code> 物件。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-keyword">private</span> Sort <span class="hljs-title function_">createSort</span><span class="hljs-params">(String field, String direction)</span> &#123;
+        <span class="hljs-keyword">if</span> (field == <span class="hljs-literal">null</span> &amp;&amp; direction == <span class="hljs-literal">null</span>) &#123;
+            <span class="hljs-keyword">return</span> Sort.unsorted();
+        &#125;
+
+        <span class="hljs-keyword">if</span> (field == <span class="hljs-literal">null</span> ^ direction == <span class="hljs-literal">null</span>) &#123;
+            <span class="hljs-keyword">return</span> Sort.unsorted();
+        &#125;
+
+        Sort.Order order;
+        <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;asc&quot;</span>.equalsIgnoreCase(direction)) &#123;
+            order = Sort.Order.asc(field);
+        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;desc&quot;</span>.equalsIgnoreCase(direction)) &#123;
+            order = Sort.Order.desc(field);
+        &#125; <span class="hljs-keyword">else</span> &#123;
+            <span class="hljs-keyword">return</span> Sort.unsorted();
+        &#125;
+
+        <span class="hljs-keyword">return</span> Sort.by(List.of(order));
+    &#125;
+&#125;</code></pre></div>
+
+<p>排序的欄位與方向必須一起提供，或兩者都不提供。若有不合理的值，便呼叫 <code>Sort.unsorted</code> 方法，視為不排序。</p>
+<p>呼叫 <code>Sort.Order.asc</code> 或 <code>Sort.Order.desc</code> 方法，傳入欄位名稱，分別可建立遞增或遞減的排序方式，其型態為 <code>Order</code>。</p>
+<p>將一至多個 <code>Order</code> 物件傳入 <code>Sort.by</code> 方法，可得到 <code>Sort</code> 物件。它代表整體的排序規則，實現多重排序也不成問題。</p>
+<p>建立出 <code>Sort</code> 物件後，傳入 repository 的 <code>findAll</code> 方法即可。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
 
     <span class="hljs-meta">@Autowired</span>
     <span class="hljs-keyword">private</span> StudentRepository studentRepository;
     
-    <span class="hljs-meta">@PostMapping(&quot;/students/reset&quot;)</span>
-    <span class="hljs-keyword">public</span> ResponseEntity&lt;Void&gt; <span class="hljs-title function_">resetStudents</span><span class="hljs-params">()</span> &#123;
-        <span class="hljs-type">Student</span> <span class="hljs-variable">s1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Student</span>();
-        s1.setName(<span class="hljs-string">&quot;Vincent&quot;</span>);
-        s1.setGrade(<span class="hljs-number">2</span>);
-        s1.setBirthday(LocalDate.of(<span class="hljs-number">1996</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>));
-        s1.setContact(Contact.of(<span class="hljs-string">&quot;vincent@school.com&quot;</span>, <span class="hljs-string">&quot;0911111111&quot;</span>));
-        s1.setCertificates(List.of(
-                Certificate.of(<span class="hljs-string">&quot;GEPT&quot;</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">&quot;Medium&quot;</span>),
-                Certificate.of(<span class="hljs-string">&quot;TOEIC&quot;</span>, <span class="hljs-number">990</span>, <span class="hljs-string">&quot;Gold&quot;</span>)
-        ));
+    <span class="hljs-meta">@GetMapping(&quot;/students&quot;)</span>
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;List&lt;Student&gt;&gt; <span class="hljs-title function_">getStudents</span><span class="hljs-params">(</span>
+<span class="hljs-params">            <span class="hljs-meta">@RequestParam(required = false)</span> String sortField,</span>
+<span class="hljs-params">            <span class="hljs-meta">@RequestParam(required = false)</span> String sortDirection</span>
+<span class="hljs-params">    )</span> &#123;
+        <span class="hljs-type">Sort</span> <span class="hljs-variable">sort</span> <span class="hljs-operator">=</span> createSort(sortField, sortDirection);
+        List&lt;Student&gt; students = studentRepository.findAll(sort);
 
-        <span class="hljs-type">Student</span> <span class="hljs-variable">s2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Student</span>();
-        s2.setName(<span class="hljs-string">&quot;Dora&quot;</span>);
-        s2.setGrade(<span class="hljs-number">3</span>);
-        s2.setBirthday(LocalDate.of(<span class="hljs-number">1995</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>));
-        s2.setContact(Contact.of(<span class="hljs-string">&quot;dora@school.com&quot;</span>, <span class="hljs-string">&quot;0922222222&quot;</span>));
-        s2.setCertificates(List.of(
-                Certificate.of(<span class="hljs-string">&quot;TOEFL&quot;</span>, <span class="hljs-number">85</span>, <span class="hljs-literal">null</span>),
-                Certificate.of(<span class="hljs-string">&quot;TOEIC&quot;</span>, <span class="hljs-number">900</span>, <span class="hljs-string">&quot;Gold&quot;</span>)
-        ));
-
-        <span class="hljs-type">Student</span> <span class="hljs-variable">s3</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Student</span>();
-        s3.setName(<span class="hljs-string">&quot;Ivy&quot;</span>);
-        s3.setGrade(<span class="hljs-number">4</span>);
-        s3.setBirthday(LocalDate.of(<span class="hljs-number">1994</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>));
-        s3.setContact(Contact.of(<span class="hljs-string">&quot;ivy@school.com&quot;</span>, <span class="hljs-string">&quot;0933333333&quot;</span>));
-        s3.setCertificates(List.of(
-                Certificate.of(<span class="hljs-string">&quot;IELTS&quot;</span>, <span class="hljs-number">5</span>, <span class="hljs-literal">null</span>)
-        ));
-
-        studentRepository.deleteAll();
-        studentRepository.insert(List.of(s1, s2, s3));
-        <span class="hljs-keyword">return</span> ResponseEntity.noContent().build();
+        <span class="hljs-keyword">return</span> ResponseEntity.ok(students);
+    &#125;
+    
+    <span class="hljs-keyword">private</span> Sort <span class="hljs-title function_">createSort</span><span class="hljs-params">(String field, String direction)</span> &#123;
+        <span class="hljs-comment">// ...</span>
     &#125;
 &#125;</code></pre></div>
 
-<p>此處會呼叫 <code>deleteAll</code> 方法，刪除 collection 中的所有資料。接著再呼叫另一個多載的 <code>insert</code> 方法，插入多筆資料。</p>
-<p>下圖是透過 GUI 工具「NoSQLBooster」查詢到的內容。<br><img src="https://ntub46010.github.io/articles/spring-boot-data-mongodb-repository-crud/nosqlbooster-find-documents.png" srcset="/img/loading.gif" lazyload /></p>
-<p>可確認到 MongoDB 會自動產生「_id」欄位，其型態為 Object Id。</p>
-<p>到目前為止，都是使用 <code>MongoRepository</code> 內建的方法存取資料庫。下一篇將說明如何設計自己的查詢條件，以及排序方式。</p>
-<p>本文的完成後專案，請<a target="_blank" rel="noopener" href="https://github.com/ntub46010/SpringBootTutorial/tree/Ch7-2">點我</a>。</p>
+<h3 id="（二）分頁"><a href="#（二）分頁" class="headerlink" title="（二）分頁"></a>（二）分頁</h3><p>當資料量太多，實務上會在排序之後，藉由「分頁」（pagination）的做法，分批從資料庫取得資料，避免造成系統負擔。</p>
+<p>要透過 repository 的方法進行排序與分頁，需在方法傳入 <code>Pageable</code> 型態的參數，提供分頁的方式。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
+
+    <span class="hljs-meta">@Query(</span>
+<span class="hljs-meta">            nativeQuery = true,</span>
+<span class="hljs-meta">            value = &quot;SELECT * FROM `student`&quot;</span>
+<span class="hljs-meta">    )</span>
+    List&lt;Student&gt; <span class="hljs-title function_">find</span><span class="hljs-params">(Pageable pageable)</span>;
+&#125;</code></pre></div>
+
+<p>以下是建立 <code>Pageable</code> 物件的方式。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
+    <span class="hljs-comment">// ...</span>
+
+    <span class="hljs-keyword">private</span> Pageable <span class="hljs-title function_">createPageable</span><span class="hljs-params">(Integer page, Integer size, Sort sort)</span> &#123;
+        <span class="hljs-keyword">if</span> (page == <span class="hljs-literal">null</span> &amp;&amp; size == <span class="hljs-literal">null</span>) &#123;
+            <span class="hljs-keyword">return</span> Pageable.unpaged(sort);
+        &#125;
+
+        <span class="hljs-keyword">if</span> (page == <span class="hljs-literal">null</span> ^ size == <span class="hljs-literal">null</span>) &#123;
+            <span class="hljs-keyword">return</span> Pageable.unpaged(sort);
+        &#125;
+
+        <span class="hljs-keyword">return</span> PageRequest.of(page, size, sort);
+    &#125;
+&#125;</code></pre></div>
+
+<p>這個 <code>Pageable</code> 是一個介面，而 Spring Data 內建了叫做 <code>PageRequest</code> 的實作類別。</p>
+<p>分頁的頁數與每頁筆數必須一起提供，或兩者都不提供。若有不合理的值，便呼叫 <code>Pageable.unpaged</code> 方法，視為不分頁。</p>
+<p>呼叫 <code>PageRequest.of</code> 方法，依序傳入「第幾頁」、「每頁筆數」，以及前面提到的 <code>Sort</code> 物件，就能建立出 <code>PageRequest</code> 物件。</p>
+<p>最後將 <code>Pageable</code> 物件傳入 repository 的方法即可。</p>
+<div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@RestController</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyController</span> &#123;
+
+    <span class="hljs-meta">@Autowired</span>
+    <span class="hljs-keyword">private</span> StudentRepository studentRepository;
+    
+    <span class="hljs-meta">@GetMapping(&quot;/students&quot;)</span>
+    <span class="hljs-keyword">public</span> ResponseEntity&lt;List&lt;Student&gt;&gt; <span class="hljs-title function_">getStudents</span><span class="hljs-params">(</span>
+<span class="hljs-params">            <span class="hljs-meta">@RequestParam(required = false)</span> String sortField,</span>
+<span class="hljs-params">            <span class="hljs-meta">@RequestParam(required = false)</span> String sortDirection,</span>
+<span class="hljs-params">            <span class="hljs-meta">@RequestParam(required = false)</span> Integer page,</span>
+<span class="hljs-params">            <span class="hljs-meta">@RequestParam(required = false)</span> Integer size</span>
+<span class="hljs-params">    )</span> &#123;
+        <span class="hljs-type">Sort</span> <span class="hljs-variable">sort</span> <span class="hljs-operator">=</span> createSort(sortField, sortDirection);
+        <span class="hljs-type">Pageable</span> <span class="hljs-variable">pageable</span> <span class="hljs-operator">=</span> createPageable(page, size, sort);
+        List&lt;Student&gt; students = studentRepository.find(pageable);
+
+        <span class="hljs-keyword">return</span> ResponseEntity.ok(students);
+    &#125;
+    
+    <span class="hljs-keyword">private</span> Sort <span class="hljs-title function_">createSort</span><span class="hljs-params">(String field, String direction)</span> &#123;
+        <span class="hljs-comment">// ...</span>
+    &#125;
+    
+    <span class="hljs-keyword">private</span> Pageable <span class="hljs-title function_">createPageable</span><span class="hljs-params">(Integer page, Integer size, Sort sort)</span> &#123;
+        <span class="hljs-comment">// ...</span>
+    &#125;
+&#125;</code></pre></div>
+
+<p>本文示範了使用 JPA Repository 對單一 table 進行 CRUD。接下來讓我們進入 2 張 table 的範疇，學習如何配置資料表的關聯。</p>
+<p>本文的完成後專案，請<a target="_blank" rel="noopener" href="https://github.com/ntub46010/SpringBootTutorial/tree/Ch8-3">點我</a>。</p>
 
                 
               </div>
@@ -527,9 +654,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/articles/spring-boot-mongo-repository-customize-query/" title="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式">
+                      <a href="/articles/spring-boot-jpa-one-to-one-relationship/" title="【Spring Boot】第10.4課－使用 JPA 配置資料表關聯（以一對一關聯為例）">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式</span>
+                        <span class="hidden-mobile">【Spring Boot】第10.4課－使用 JPA 配置資料表關聯（以一對一關聯為例）</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -537,8 +664,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境">
-                        <span class="hidden-mobile">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
+                      <a href="/articles/spring-boot-setup-mysql-and-introduce-jpa/" title="【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA">
+                        <span class="hidden-mobile">【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -619,7 +746,7 @@
       
         <a href="/articles/spring-boot-mysql-using-jpa-repository/" title="【Spring Boot】第10.3課－使用 JPA Repository 存取 MySQL 資料庫"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">【Spring Boot】第10.3課－使用 JPA Repository 存取 MySQL 資料庫</span>
         </a>
       
@@ -655,7 +782,7 @@
       
         <a href="/articles/spring-boot-data-mongodb-repository-crud/" title="【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作</span>
         </a>
       
