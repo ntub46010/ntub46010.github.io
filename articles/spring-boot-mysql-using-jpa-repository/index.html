@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
 <meta property="article:published_time" content="2024-05-29T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-05T08:13:47.655Z">
+<meta property="article:modified_time" content="2025-01-18T10:26:07.702Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
@@ -228,7 +228,7 @@
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2025-01-05
+                    本文最後更新於：2025-01-18
                   
                 
               </p>
@@ -297,7 +297,7 @@
     <span class="hljs-comment">// getter, setter ...</span>
 &#125;</code></pre></div>
 
-<p>以下是上一篇提到的 <code>AuditorAware</code> 元件。用途是在插入或更新資料時，自動在實體類別中具有 <code>@CreatedBy</code> 或 <code>@LastModifiedBy</code> 注解的欄位，填入使用者資訊，此處以隨機字串代替。</p>
+<p>以下是上一篇提到的 <code>AuditorAware</code> 元件。用途是當插入或更新資料時，能在實體類別中具有 <code>@CreatedBy</code> 或 <code>@LastModifiedBy</code> 注解的欄位，自動填入使用者資訊，此處以隨機字串代替。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Component</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AuditorAwareImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">AuditorAware</span>&lt;String&gt; &#123;
 
@@ -321,7 +321,7 @@
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">INSERT</span> <span class="hljs-keyword">INTO</span> `student` (`name`, `grade`, `blood_type`, `birthday`)
 <span class="hljs-keyword">VALUE</span> (&quot;Vincent&quot;, <span class="hljs-number">4</span>, &quot;A&quot;, &quot;1996-01-01&quot;);</code></pre></div>
 
-<p>此時該方法會回傳插入成功的資料，且包含由 MySQL 產生的 id。</p>
+<p>此時該方法會回傳插入成功的資料，而且會包含由 MySQL 產生的 id。</p>
 <p>又或者是呼叫 <code>findById</code> 方法，則會產生如下的指令：</p>
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span>
 <span class="hljs-keyword">FROM</span> `student`
@@ -467,7 +467,7 @@
 
 <p>日期欄位是使用 <code>After</code> 與 <code>Before</code> 關鍵字。</p>
 <h3 id="（三）組合多個條件"><a href="#（三）組合多個條件" class="headerlink" title="（三）組合多個條件"></a>（三）組合多個條件</h3><p>查詢條件可透過 <code>And</code> 或 <code>Or</code> 的邏輯組合起來。</p>
-<p>以下的條件，是聯繫方式的信箱或電話等於參數。</p>
+<p>以下的條件，是聯繫方式的信箱等於某個值，或電話等於某個值。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Repository</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">StudentRepository</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">JpaRepository</span>&lt;Student, Long&gt; &#123;
     List&lt;Student&gt; <span class="hljs-title function_">findByContactEmailOrContactPhone</span><span class="hljs-params">(String email, String phone)</span>;
@@ -488,8 +488,8 @@
     List&lt;Student&gt; <span class="hljs-title function_">findByContact</span><span class="hljs-params">(String email, String phone)</span>;
 &#125;</code></pre></div>
 
-<p>使用 <code>@Query</code> 注解，可以用字串的形式提供語法。而當中的「?1」、「?2」等符號，代表要取用方法的第幾個參數（位置從 1 開始算）。並且 <code>nativeQuery</code> 參數需給予 true 值，代表這是原生語法。</p>
-<p>要注意的是，SQL 語法結尾請不要加分號 ;，避免被認為語法有誤。例如上述的「?2」代表第二個參數，但 JPA 會解讀成「?2;」，並認為我們寫錯了，拋出「Ordinal parameter label was not an integer」的例外訊息。</p>
+<p>使用 <code>@Query</code> 注解，可以傳入字串提供語法。而當中的「?1」、「?2」等符號，代表要取用方法的第幾個參數（位置從 1 開始算）。並且 <code>nativeQuery</code> 參數需給予 true 值，代表這是原生語法。</p>
+<p>要注意的是，SQL 語法結尾請不要加分號 ;，避免被認為語法有誤。例如上述的「?2」代表第二個參數，但 JPA 會看成「?2;」，並認為我們寫錯了，拋出「Ordinal parameter label was not an integer」的例外訊息。</p>
 <p>又或者是本文第五節的排序，假設原生語法寫成 <code>SELECT * FROM student;</code>，則 JPA 會將排序語法直接附加在後，變成：</p>
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span>
 <span class="hljs-keyword">FROM</span> `student`;

@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
 <meta property="article:published_time" content="2024-05-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-04T10:29:15.543Z">
+<meta property="article:modified_time" content="2025-01-16T16:05:44.659Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
@@ -228,7 +228,7 @@
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2025-01-04
+                    本文最後更新於：2025-01-17
                   
                 
               </p>
@@ -236,7 +236,7 @@
             
               <div class="markdown-body">
                 
-                <p>在第 9 課系列，我們了解如何在 Spring Boot 操作 MongoDB。而第 10 課系列要學習的是操作 MySQL 資料庫，它是一種關聯式資料庫，具有嚴謹的性質。除了是一般課程常見的題材，幾乎也是職缺的必備要求。</p>
+                <p>在第 9 課系列，我們了解如何在 Spring Boot 操作 MongoDB。而第 10 課系列要學習的是操作 MySQL 資料庫，它是一種關聯式資料庫，具有嚴謹的性質。它除了是一般課程常見的題材，幾乎也是職缺的必備要求。</p>
 <p>本文會啟動 MySQL 的服務，並在 Spring Boot 專案中配置各種參數，確認可以連線上。最後介紹「Spring Data JPA」這套框架，了解它的由來。</p>
 <hr>
 <h2 id="一、準備-MySQL-環境"><a href="#一、準備-MySQL-環境" class="headerlink" title="一、準備 MySQL 環境"></a>一、準備 MySQL 環境</h2><h3 id="（一）Docker-容器"><a href="#（一）Docker-容器" class="headerlink" title="（一）Docker 容器"></a>（一）Docker 容器</h3><p>讀者可在命令列（command line）環境下，透過 Docker 指令啟動 MySQL 的服務。</p>
@@ -244,7 +244,7 @@
 
 <p>以上取用的 MySQL 版本為 8.2.0。容器取名為「MySQL_8.2.0」，運行在 3306 的 port 號上。而 root 帳號的密碼設為「123456」。</p>
 <p>其他版本可參考 <a target="_blank" rel="noopener" href="https://hub.docker.com/_/mysql">Docker Hub</a>。關於 Docker 的操作，本文將不詳細介紹。</p>
-<h3 id="（二）圖形化介面工具"><a href="#（二）圖形化介面工具" class="headerlink" title="（二）圖形化介面工具"></a>（二）圖形化介面工具</h3><p>為了在後續的練習中能夠直接查詢資料庫，確認裡面的資料，讀者可安裝圖形化介面（GUI）工具。本文選擇「<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/workbench/">Workbench</a>」。</p>
+<h3 id="（二）圖形化介面工具"><a href="#（二）圖形化介面工具" class="headerlink" title="（二）圖形化介面工具"></a>（二）圖形化介面工具</h3><p>為了在後續的練習中能夠查詢資料庫，直接確認裡面的資料，讀者可安裝圖形化介面（GUI）工具。本文選擇「<a target="_blank" rel="noopener" href="https://dev.mysql.com/downloads/workbench/">Workbench</a>」。</p>
 <p>開啟 GUI 後，點擊「MySQL Connections」字樣旁邊的「+」號，會出現資料庫連線設定的視窗。若讀者想存取不同伺服器上的資料庫，就能在這裡建立多個需要的連線。<br><img src="https://ntub46010.github.io/articles/spring-boot-setup-mysql-and-introduce-jpa/mysql-workbench-setup-new-connection.png" srcset="/img/loading.gif" lazyload /></p>
 <p>在上圖中，「Connection name」欄位是為這個連線命名，方便我們在 GUI 辨識。其他欄位則填寫資料庫的位址、port 號與帳號。至於密碼，需點擊「Store in Vault …」後，在小視窗輸入。</p>
 <p>最後按下「OK」，即可建立連線。</p>
@@ -252,7 +252,7 @@
 <div class="code-wrapper"><pre><code class="hljs sql"><span class="hljs-keyword">CREATE</span> DATABASE `school`;
 USE `school`;</code></pre></div>
 
-<p>按下閃電符號後，就會執行視窗中的全部指令。以上這些操作，其實不透過指令，也能藉由 GUI 完成，讀者可自行探索。</p>
+<p>按下閃電符號後，就會執行視窗中的指令。以上這些操作，其實不透過指令，也能藉由 GUI 完成，讀者可自行探索。</p>
 <h2 id="二、準備程式專案"><a href="#二、準備程式專案" class="headerlink" title="二、準備程式專案"></a>二、準備程式專案</h2><h3 id="（一）添加依賴"><a href="#（一）添加依賴" class="headerlink" title="（一）添加依賴"></a>（一）添加依賴</h3><p>本節讓我們在 Spring Boot 專案中串接資料庫。請在 pom.xml 檔案添加「Spring Data JPA」與「MySQL Connector」的依賴。</p>
 <div class="code-wrapper"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
@@ -299,7 +299,7 @@ USE `school`;</code></pre></div>
 
 <p>Spring Data JPA 預設是先封裝另一個叫做「Hibernate」的框架，而它又封裝了 JDBC。Hibernate 提供了與資料庫互動的強大功能，本身可獨立使用。Spring Data JPA 只是將其整合進來，讓我們容易應用於 Spring Boot 程式中罷了。</p>
 <p>為了讓 Hibernate 根據不同的資料庫執行正確的指令，我們需要提供代表資料庫種類的「方言」，以及資料庫的版本與儲存引擎。此處提供 <code>MySQLDialect</code> 方言、版本 8 與 InnoDB 儲存引擎。</p>
-<p>Spring Data JPA 允許我們在程式中直接定義資料表（table），並於啟動 Spring Boot 程式時，讓 Hibernate 自動去配置 table。有以下幾個選項。</p>
+<p>Spring Data JPA 允許我們在程式中直接定義資料表（table），並於啟動 Spring Boot 程式時，讓 Hibernate 自動去資料庫中做配置。有以下幾個選項。</p>
 <ul>
 <li>create：重新建立 table，故原有的資料會遺失，請慎用。</li>
 <li>create-drop：同 create，且程式關閉後，會自動刪除 table。</li>
@@ -309,7 +309,7 @@ USE `school`;</code></pre></div>
 </ul>
 <p>最後請啟動 Spring Boot。若 console 沒有出現 exception 訊息，代表有成功連線到 MySQL 的服務。</p>
 <p>這份叫做 application.properties 的配置檔，在第 7 課有專門介紹。讀者只要知道 Spring Data JPA 會從中讀取指定名稱的設定值即可。</p>
-<h2 id="三、定義資料的實體類別"><a href="#三、定義資料的實體類別" class="headerlink" title="三、定義資料的實體類別"></a>三、定義資料的實體類別</h2><p>在資料庫中，每張 table 在程式中都對應到一個實體（entity）類別。比方說想儲存學生資料，那就在程式中設計對應的實體類別，如下：</p>
+<h2 id="三、定義資料的實體類別"><a href="#三、定義資料的實體類別" class="headerlink" title="三、定義資料的實體類別"></a>三、定義資料的實體類別</h2><p>在資料庫中，每張 table 在程式中都對應到一個實體（entity）類別。比方說想儲存學生資料，那就在程式中設計對應的類別，如下：</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">import</span> jakarta.persistence.*;
 
 <span class="hljs-meta">@Entity</span>
@@ -327,7 +327,7 @@ USE `school`;</code></pre></div>
 
 <p>該類別叫做「Student」，包含 id、名字與年級，共 3 個欄位。</p>
 <p>使用 <code>@Entity</code> 注解，代表它是要儲存到資料庫的實體類別。而 <code>@Table</code> 注解，則設定它在資料庫中，要對應到叫做「student」的 table 。</p>
-<p>在 id 欄位，冠上了 <code>@Id</code> 注解，代表它是 table 中的主鍵（Primary Key，PK）。而 <code>@GeneratedValue</code> 注解，則設定主鍵值的產生方式。由於 MySQL 支援自增長（auto increment）的 id，因此選擇 GenerationType.IDENTITY。</p>
+<p>在 id 欄位，冠上了 <code>@Id</code> 注解，代表它是 table 中的主鍵（Primary Key，PK）。而 <code>@GeneratedValue</code> 注解，則設定主鍵值的產生方式。由於 MySQL 支援自增長（auto increment）的流水號 id，因此選擇 <code>GenerationType.IDENTITY</code>。</p>
 <p>重新啟動 Spring Boot，讀者便可在 GUI 中看到建立好的 table 了。<br><img src="https://ntub46010.github.io/articles/spring-boot-setup-mysql-and-introduce-jpa/mysql-workbench-describe-table-with-few-fields.png" srcset="/img/loading.gif" lazyload /></p>
 <h2 id="四、Spring-Data-JPA-介紹"><a href="#四、Spring-Data-JPA-介紹" class="headerlink" title="四、Spring Data JPA 介紹"></a>四、Spring Data JPA 介紹</h2><p>在本文第二節，我們添加了「Spring Data JPA」的依賴，本節將進一步介紹。</p>
 <h3 id="（一）JDBC-使用範例"><a href="#（一）JDBC-使用範例" class="headerlink" title="（一）JDBC 使用範例"></a>（一）JDBC 使用範例</h3><p>當 JDBC 結合對應的驅動程式，便可存取 MySQL 等關聯式資料庫，以下為示意程式：</p>
@@ -369,9 +369,9 @@ USE `school`;</code></pre></div>
 <h3 id="（二）物件關聯對映（ORM）"><a href="#（二）物件關聯對映（ORM）" class="headerlink" title="（二）物件關聯對映（ORM）"></a>（二）物件關聯對映（ORM）</h3><p>示意程式中，有個環節是將商業邏輯物件與資料庫的資料互相轉換。比方說查詢時，需取出結果中的每個欄位值，在程式中建立出物件；插入或更新時，則需拼湊出 SQL 語法。</p>
 <p>因此，「物件關聯對映」（Object-Relational Mapping，ORM）這項技術出現了，為的就是封裝這段轉換過程。其中 Hibernate、MyBatis、EclipseLink 等 ORM 框架就有提供這項功能，可單獨引進使用。</p>
 <p>這些 ORM 框架，並不是只有提供物件和資料之間的轉換功能而已，它們本身就是對整個使用 JDBC 的過程進行封裝。</p>
-<h3 id="（三）Spring-Data-JPA-框架"><a href="#（三）Spring-Data-JPA-框架" class="headerlink" title="（三）Spring Data JPA 框架"></a>（三）Spring Data JPA 框架</h3><p>Spring 為了讓我們在程式中更容易使用這些存取資料庫的技術，於是推出 Spring Data JPA，將 ORM 框架整合進來。但它只整合那些有實現 JPA（Java Persistance API）規範的 ORM 框架，如 Hibernate、EclipseLink。</p>
+<h3 id="（三）Spring-Data-JPA-框架"><a href="#（三）Spring-Data-JPA-框架" class="headerlink" title="（三）Spring Data JPA 框架"></a>（三）Spring Data JPA 框架</h3><p>Spring 為了讓我們在程式中更容易存取資料庫，於是推出 Spring Data JPA，將 ORM 框架整合進來。但它只整合那些有實現 JPA（Java Persistance API）規範的 ORM 框架，如 Hibernate、EclipseLink。</p>
 <p>所謂的 JPA 規範，其實我們在本文第三節建立 Student 類別時已經接觸到了，例如「jakarta.persistence」套件下的 <code>@Entity</code>、<code>@Table</code> 與 <code>@Id</code> 等注解。後續文章也會使用 <code>@Column</code> 注解，進行欄位的細部設定；或透過 <code>@OneToOne</code> 注解，設計一對一關聯。</p>
-<p>Spring Data JPA 預設採用 Hibernate 框架來存取資料庫。讓我們在操作上，能夠以 Java 程式語言為導向，不必依賴於不同資料庫種類的原生 SQL 語法。</p>
+<p>Spring Data JPA 預設採用 Hibernate 框架來存取資料庫，讓我們在操作上，能夠以 Java 程式語言為導向，不必依賴於不同資料庫種類的原生 SQL 語法。</p>
 <p>本文的完成後專案，請<a target="_blank" rel="noopener" href="https://github.com/ntub46010/SpringBootTutorial/tree/Ch8-1">點我</a>。</p>
 
                 

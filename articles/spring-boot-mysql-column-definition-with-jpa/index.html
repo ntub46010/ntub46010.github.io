@@ -19,16 +19,16 @@
   <meta name="author" content="Vincent Zheng">
   <meta name="keywords" content="">
   
-    <meta name="description" content="我們知道可藉由定義實體類別，讓 Spring Data JPA 建立出資料表。而本文會介紹各種設定欄位的方式，最基本的有欄位名稱、長度、唯一性。此外也會重複運用具有相同設定的欄位，做法包含嵌入自定義物件，以及繼承基底類別。最後說明如何自動在欄位填入日期時間與使用者資料。">
+    <meta name="description" content="我們知道可藉由定義實體類別，讓 Spring Data JPA 建立出資料表。而本文會介紹各種設定欄位的方式，包含最基本的欄位名稱、長度與唯一性。此外也會重複運用具有相同設定的欄位，包含嵌入物件與繼承基底類別。最後說明如何自動在欄位填入日期時間與使用者資料。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【Spring Boot】第10.2課－使用 JPA 設計實體類別與 MySQL 資料表欄位">
 <meta property="og:url" content="https://ntub46010.github.io/articles/spring-boot-mysql-column-definition-with-jpa/">
 <meta property="og:site_name" content="吉古拉的程式拾光">
-<meta property="og:description" content="我們知道可藉由定義實體類別，讓 Spring Data JPA 建立出資料表。而本文會介紹各種設定欄位的方式，最基本的有欄位名稱、長度、唯一性。此外也會重複運用具有相同設定的欄位，做法包含嵌入自定義物件，以及繼承基底類別。最後說明如何自動在欄位填入日期時間與使用者資料。">
+<meta property="og:description" content="我們知道可藉由定義實體類別，讓 Spring Data JPA 建立出資料表。而本文會介紹各種設定欄位的方式，包含最基本的欄位名稱、長度與唯一性。此外也會重複運用具有相同設定的欄位，包含嵌入物件與繼承基底類別。最後說明如何自動在欄位填入日期時間與使用者資料。">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
 <meta property="article:published_time" content="2024-05-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-15T15:28:25.198Z">
+<meta property="article:modified_time" content="2025-01-18T08:41:38.167Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
@@ -228,7 +228,7 @@
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2025-01-15
+                    本文最後更新於：2025-01-18
                   
                 
               </p>
@@ -237,7 +237,7 @@
               <div class="markdown-body">
                 
                 <p>在上一篇，我們了解可藉由定義實體類別，讓 Spring Data JPA 建立出資料表。而本文會介紹各種設定資料表欄位的方式，包含欄位名稱、長度與唯一性等。</p>
-<p>此外也會重複運用具有相同設定的欄位，做法包含嵌入自定義物件，以及繼承基底類別。最後說明如何在插入或更新資料時，自動在欄位填入日期時間與使用者資料。</p>
+<p>此外也會重複運用具有相同設定的欄位，包含嵌入物件與繼承基底類別。最後說明如何在插入或更新資料時，自動在欄位填入日期時間與使用者資料。</p>
 <hr>
 <h2 id="一、實體類別介紹"><a href="#一、實體類別介紹" class="headerlink" title="一、實體類別介紹"></a>一、實體類別介紹</h2><p>Spring Data JPA 允許我們在程式中，透過定義實體類別的方式，來設計資料表（table）。所謂的實體類別，指的是要儲存到資料庫的資料類別。</p>
 <p>以下建立一個實體類別，描述了學生資料。</p>
@@ -286,7 +286,7 @@
 <tr>
 <td>nullable</td>
 <td>值是否可為 null</td>
-<td>Java 基本型態預設為 false；參考型態預設為 true。</td>
+<td>Java 基本型態預設為 false；參考型態（如 String）預設為 true。</td>
 </tr>
 <tr>
 <td>unique</td>
@@ -329,11 +329,11 @@
     <span class="hljs-comment">// getter, setter ...</span>
 &#125;</code></pre></div>
 
-<p>另外，如果欄位型態是一個「列舉」（Enum），可冠上 <code>@Enumerated</code> 注解，設定將欄位值存為 Enum 值的名字。否則預設會以序數（ordinal）來儲存，可讀性較差。</p>
-<p>在網路上其他文章中，讀者可能會注意到那些範例程式，即便實體類別的欄位名與 table 欄位一致，依然會再度使用 <code>@Column</code> 注解來設定 table 欄位名稱。筆者認為這樣的好處，是能避免日後在實體類別修改欄位名稱，無意間破壞與 table 的對應關係。</p>
+<p>另外，如果欄位型態是一個「列舉」（Enum），不妨冠上 <code>@Enumerated</code> 注解，並設定以 Enum 值的名字來儲存。否則預設會以序數（ordinal）來儲存，可讀性較差。</p>
+<p>在網路上其他文章中，讀者可能會注意到那些範例程式，即便實體類別的欄位名與 table 欄位一致，依然會再度使用 <code>@Column</code> 注解來設定 table 欄位名稱。筆者認為這樣的好處，是能避免日後在實體類別修改欄位名稱，無意間影響與 table 的對應關係。</p>
 <p>設定完成後，請讀者啟動程式，讓 Spring Data JPA 自動在資料庫產生 table。下圖是在 MySQL 使用 <code>DESCRIBE</code> 指令，確認 table 的定義。<br><img src="https://ntub46010.github.io/articles/spring-boot-mysql-column-definition-with-jpa/mysql-workbench-describe-table-with-more-fields.png" srcset="/img/loading.gif" lazyload /></p>
-<p>在結果中，可看到欄位型態、哪個是唯一欄位，或者是否允許 null 值等資訊。</p>
-<h2 id="三、嵌入物件欄位"><a href="#三、嵌入物件欄位" class="headerlink" title="三、嵌入物件欄位"></a>三、嵌入物件欄位</h2><p>若想在實體類別中宣告自定義的物件欄位，那就得透過「嵌入」（embed）的方式來處理。</p>
+<p>在結果中，可看到欄位型態、是否為唯一欄位，或者是否允許 null 值等資訊。</p>
+<h2 id="三、嵌入物件欄位"><a href="#三、嵌入物件欄位" class="headerlink" title="三、嵌入物件欄位"></a>三、嵌入物件欄位</h2><p>我們也可透過「嵌入」（embed）的方式，將自定義的物件放入實體類別中。</p>
 <p>以下建立叫做「Contact」的類別，描述了聯繫方式。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Embeddable</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Contact</span> &#123;
@@ -343,7 +343,7 @@
     <span class="hljs-comment">// getter, setter ...</span>
 &#125;</code></pre></div>
 
-<p>此類別包含信箱與電話這 2 個欄位。為了嵌入到實體類別中，需冠上 <code>@Embeddable</code> 注解。它相當於是一個「共享類別」，除了學生，若日後還有其他實體類別（如老師、員工、公司等），均可重複使用。</p>
+<p>此類別包含信箱與電話這 2 個欄位。為了將它嵌入到實體類別中，需冠上 <code>@Embeddable</code> 注解。這麼做的好處，是日後若有其他實體類別（如老師、員工、公司等），均可重複使用。</p>
 <p>接著回到 Student 實體類別，使用 <code>@Embedded</code> 注解嵌入 Contact 類別。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@Entity</span>
 <span class="hljs-meta">@Table(name = &quot;student&quot;)</span>
@@ -428,12 +428,12 @@
     &#125;
 &#125;</code></pre></div>
 
-<p>這個 AuditorAware 介面接收一個泛型類別，它需要與那些冠上 <code>@CreatedBy</code> 和 <code>@LastModifiedBy</code> 的欄位的型態相同。由於實體類別中的 createdBy 和 updatedBy 欄位是字串，因此泛型類別應傳入 String。</p>
+<p>這個 <code>AuditorAware</code> 介面接收一個泛型類別，它需要與那些冠上 <code>@CreatedBy</code> 和 <code>@LastModifiedBy</code> 注解的欄位型態相同。由於實體類別中的 createdBy 和 updatedBy 欄位是字串，因此泛型類別應傳入 String。</p>
 <p>接著覆寫 <code>getCurrentAuditor</code> 方法，它會在資料正要被儲存時，由 Spring Data JPA 觸發。其回傳值會被賦予給具有這兩種注解的欄位。此處回傳隨機字串，當作使用者的 id。</p>
-<p>附帶一提，若讀者所開發的專案有引進 Spring Security，那就可以從「Security Context」獲取當前使用者資訊。</p>
+<p>附帶一提，若讀者所開發的專案有引進 Spring Security，那就可以從「Security Context」獲取當前使用者的資訊。</p>
 <h2 id="五、共享相同的欄位設定"><a href="#五、共享相同的欄位設定" class="headerlink" title="五、共享相同的欄位設定"></a>五、共享相同的欄位設定</h2><h3 id="（一）用於嵌入欄位"><a href="#（一）用於嵌入欄位" class="headerlink" title="（一）用於嵌入欄位"></a>（一）用於嵌入欄位</h3><p>在本文第三節，我們在 Student 實體類別嵌入自定義的 Contact 類別，代表聯繫方式。</p>
-<p>若將 Contact 也嵌入到其他實體類別，且內部欄位的設定均相同，那麼持續使用 <code>@AttributeOverride</code> 注解，就會寫出重複的設定。然而 Spring Data JPA 並不支援直接在 Contact 類別內部使用 <code>@Column</code> 注解來設定。</p>
-<p>為了重複利用欄位設定，我們首先需建立一個父類別，將要共享的欄位抽離過去。此外，為了強調該父類別是「基底類別」，不應被用來建立物件，故宣告為抽象。</p>
+<p>Spring Data JPA 並不支援直接在 Contact 類別內部使用 <code>@Column</code> 注解來設定。因此若將 Contact 也嵌入到其他實體類別，且內部欄位的設定均相同，那麼就會持續使用 <code>@AttributeOverride</code> 注解，寫出重複的設定。</p>
+<p>但重複利用欄位設定這個想法，還是可以實現的。我們首先需建立一個父類別，將要共享的欄位抽離過去。此外，為了強調該父類別是「基底類別」，不會被用來建立物件，故宣告為抽象。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@MappedSuperclass</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseContact</span> &#123;
     
@@ -452,7 +452,7 @@
 &#125;</code></pre></div>
 
 <p>如此一來，在 Student 實體類別就不必透過 <code>@AttributeOverride</code> 注解來設定欄位值了。除非有少數特例需個別設定，否則可將其移除。</p>
-<h3 id="（二）用於實體類別"><a href="#（二）用於實體類別" class="headerlink" title="（二）用於實體類別"></a>（二）用於實體類別</h3><p>這種 <code>@MappedSuperclass</code> 注解，亦可用於那些實體類別都具備的欄位，例如 id、建立與更新資料的時間、建立與更新資料的人。</p>
+<h3 id="（二）用於實體類別"><a href="#（二）用於實體類別" class="headerlink" title="（二）用於實體類別"></a>（二）用於實體類別</h3><p>這個 <code>@MappedSuperclass</code> 注解，亦可用於那些實體類別都具備的欄位，例如 id、建立與更新資料的時間、建立與更新資料的人。</p>
 <p>以下針對實體類別建立了一個基底類別。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-meta">@MappedSuperclass</span>
 <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseEntity</span> &#123;
