@@ -27,8 +27,8 @@
 <meta property="og:description" content="我們知道在類別冠上 @Service、@Repository 等注解，就能讓 Spring Boot 建立出元件。但假設我們想讓元件透過 List 或 Map 等成員，來儲存自己的資料或狀態，那該如何對它們進行初始化呢？本文將介紹 @Bean 注解，透過程式碼手動進行元件的建立過程。">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
-<meta property="article:published_time" content="2019-06-22T17:00:00.000Z">
-<meta property="article:modified_time" content="2025-01-01T07:40:46.394Z">
+<meta property="article:published_time" content="2020-03-03T14:34:49.000Z">
+<meta property="article:modified_time" content="2025-02-02T10:19:04.445Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
@@ -228,7 +228,7 @@
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2025-01-01
+                    本文最後更新於：2025-02-02
                   
                 
               </p>
@@ -514,7 +514,7 @@
 
 <h3 id="（二）結合配置檔"><a href="#（二）結合配置檔" class="headerlink" title="（二）結合配置檔"></a>（二）結合配置檔</h3><p>在目前的程式中，controller 只會取用其中一個實作類別。而另一個用不到的元件，其實不必建立出來。</p>
 <p>因此，我們可將這兩個 <code>@Bean</code> 注解的方法合併，再透過 <code>if</code> 判斷決定要建立哪一個。</p>
-<p>接下來的範例，筆者會結合第 7 課介紹的 application.properties 配置檔，提供元件初始化的一些選項。請先添加以下 2 個設定值：</p>
+<p>接下來的範例，筆者會結合<a href="/articles/spring-boot-application-properties-configuration/" target="_blank">第 7 課</a>介紹的 application.properties 配置檔，提供元件初始化的一些選項。請先添加以下 2 個設定值：</p>
 <div class="code-wrapper"><pre><code class="hljs properties"><span class="hljs-attr">user-repository.storage</span>=<span class="hljs-string">map</span>
 <span class="hljs-attr">user-repository.test-data.amount</span>=<span class="hljs-string">3</span></code></pre></div>
 
@@ -591,9 +591,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境">
+                      <a href="/articles/spring-boot-data-mongodb-repository-crud/" title="【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
+                        <span class="hidden-mobile">【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -640,7 +640,7 @@
         aria-expanded="true"
       >
         Spring Boot
-        <span class="list-group-count">(17)</span>
+        <span class="list-group-count">(18)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -690,15 +690,6 @@
     
       
       
-        <a href="/articles/spring-boot-setup-mysql-and-introduce-jpa/" title="【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA</span>
-        </a>
-      
-    
-      
-      
         <a href="/articles/spring-boot-mysql-column-definition-with-jpa/" title="【Spring Boot】第10.2課－使用 JPA 設計實體類別與 MySQL 資料表欄位"
            class="list-group-item list-group-item-action
            ">
@@ -708,10 +699,10 @@
     
       
       
-        <a href="/articles/spring-boot-mongo-repository-customize-query/" title="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式"
+        <a href="/articles/spring-boot-setup-mysql-and-introduce-jpa/" title="【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA"
            class="list-group-item list-group-item-action
            ">
-          <span class="category-post">【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式</span>
+          <span class="category-post">【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA</span>
         </a>
       
     
@@ -721,15 +712,6 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作</span>
-        </a>
-      
-    
-      
-      
-        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
         </a>
       
     
@@ -748,6 +730,33 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mockmvc-integration-test/" title="【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mongo-repository-customize-query/" title="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
         </a>
       
     

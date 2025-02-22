@@ -27,8 +27,8 @@
 <meta property="og:description" content="當 Controller 的一支 API 處理方法，撰寫了過長的程式碼，那它可能已經做超出自己職責的事了。本文將介紹「三層式架構」，將程式碼進一步切分出商業邏輯層（Service）與資料存取層（Repository）。並搭配範例專案，讓讀者體會切分的過程與思路。">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
-<meta property="article:published_time" content="2019-06-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-22T15:24:32.751Z">
+<meta property="article:published_time" content="2019-06-02T16:04:37.000Z">
+<meta property="article:modified_time" content="2025-02-02T10:19:04.445Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
@@ -228,7 +228,7 @@
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2024-12-22
+                    本文最後更新於：2025-02-02
                   
                 
               </p>
@@ -236,7 +236,7 @@
             
               <div class="markdown-body">
                 
-                <p>在第 3 課、第 4 課，我們只有 Controller 這個地方，能撰寫程式來處理請求。然而若全部都寫在這裡，整個類別就會很龐大。</p>
+                <p>在<a href="/articles/spring-boot-controller-implement-restful-api/" target="_blank">第 3 課</a>與<a href="/articles/spring-boot-controller-query-string-and-header/" target="_blank">第 4 課</a>，我們只有 Controller 這個地方，能撰寫程式來處理請求。然而若全部都寫在這裡，整個類別就會很龐大。</p>
 <p>本文將介紹「三層式架構」，並搭配範例專案，點出當前做法所隱含的問題。接著進行修改，進一步將程式碼片段抽離到 Service 與 Repository 兩個層次，讓讀者體會切分的過程與思路。</p>
 <hr>
 <p>本文的練習用專案，請<a target="_blank" rel="noopener" href="https://github.com/ntub46010/SpringBootTutorial/tree/Ch4">點我</a>。</p>
@@ -289,7 +289,7 @@
     <span class="hljs-comment">// getter, setter ...</span>
 &#125;</code></pre></div>
 
-<h2 id="二、三層式架構的目的與做法"><a href="#二、三層式架構的目的與做法" class="headerlink" title="二、三層式架構的目的與做法"></a>二、三層式架構的目的與做法</h2><h3 id="（一）介紹"><a href="#（一）介紹" class="headerlink" title="（一）介紹"></a>（一）介紹</h3><p>在第 3 課，筆者提到 MVC 架構是為了將不同用途的程式分門別類，不要通通寫在一起。在前後端分離的系統中，V（view）屬於前端的工作。</p>
+<h2 id="二、三層式架構的目的與做法"><a href="#二、三層式架構的目的與做法" class="headerlink" title="二、三層式架構的目的與做法"></a>二、三層式架構的目的與做法</h2><h3 id="（一）介紹"><a href="#（一）介紹" class="headerlink" title="（一）介紹"></a>（一）介紹</h3><p>在<a href="/articles/spring-boot-controller-implement-restful-api/" target="_blank">第 3 課</a>，筆者提到 MVC 架構是為了將不同用途的程式分門別類，不要通通寫在一起。在前後端分離的系統中，V（view）屬於前端的工作。</p>
 <p>三層式架構的目標，是將屬於後端的 M（Model）與 C（Controller）做進一步的切分。那麼要如何進行呢？這會包含「分層」與「設計資料規格」兩項工作。</p>
 <h3 id="（二）分層"><a href="#（二）分層" class="headerlink" title="（二）分層"></a>（二）分層</h3><p>請讀者回頭看看第一節的範例程式，createProduct 這支 API 處理方法，混合了不同目的的程式碼片段，包含：</p>
 <ol>
@@ -571,7 +571,7 @@
 <p>上面宣告了一個 Service 類別，準備實作產品的商業邏輯。</p>
 <p>此處還用 <code>new</code> 建立了 ProductRepository 和 UserRepository 的全域變數，以便呼叫前面第五節封裝好的程式。</p>
 <p>如果讀者以前已經碰過一點 Spring Boot，看到這邊應該覺得奇怪：為何不使用 <code>@Autowired</code> 注解，而是用 new 的？</p>
-<p>原因是筆者想在第 6 課單獨用一篇文章，來介紹「控制反轉」及「依賴注入」這兩項關於 Spring 的重要觀念，故本文暫時用 new 的方式。</p>
+<p>原因是筆者想在<a href="/articles/spring-boot-bean-ioc-di-and-polymorphism/" target="_blank">第 6 課</a>單獨用一篇文章，來介紹「控制反轉」及「依賴注入」這兩項關於 Spring 的重要觀念，故本文暫時用 new 的方式。</p>
 <h3 id="（二）取得資料"><a href="#（二）取得資料" class="headerlink" title="（二）取得資料"></a>（二）取得資料</h3><p>由於代表 DB 欄位的類別為 ProductPO，若想將其變成前端需要的 ProductVO 規格，那就得先寫出轉換的方法。</p>
 <div class="code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductVO</span> &#123;
     <span class="hljs-comment">// ...</span>
@@ -830,7 +830,7 @@
         aria-expanded="true"
       >
         Spring Boot
-        <span class="list-group-count">(17)</span>
+        <span class="list-group-count">(18)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -880,15 +880,6 @@
     
       
       
-        <a href="/articles/spring-boot-setup-mysql-and-introduce-jpa/" title="【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA</span>
-        </a>
-      
-    
-      
-      
         <a href="/articles/spring-boot-mysql-column-definition-with-jpa/" title="【Spring Boot】第10.2課－使用 JPA 設計實體類別與 MySQL 資料表欄位"
            class="list-group-item list-group-item-action
            ">
@@ -898,10 +889,10 @@
     
       
       
-        <a href="/articles/spring-boot-mongo-repository-customize-query/" title="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式"
+        <a href="/articles/spring-boot-setup-mysql-and-introduce-jpa/" title="【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA"
            class="list-group-item list-group-item-action
            ">
-          <span class="category-post">【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式</span>
+          <span class="category-post">【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA</span>
         </a>
       
     
@@ -911,15 +902,6 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作</span>
-        </a>
-      
-    
-      
-      
-        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
         </a>
       
     
@@ -938,6 +920,33 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mockmvc-integration-test/" title="【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mongo-repository-customize-query/" title="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
         </a>
       
     

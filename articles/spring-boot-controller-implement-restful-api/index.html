@@ -27,8 +27,8 @@
 <meta property="og:description" content="後端領域的初學者，應該先具備 Web API 的概念，並且也知道前後端會透過 payload 與 HTTP 狀態碼來交換資料。本文一開始先簡介 MVC 架構。接著在 Spring Boot 中撰寫 RESTful API，將相關概念加以活用。最後會完成 GET、POST、PUT 與 DELETE 這 4 支 API，分別進行 CRUD 操作。">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
-<meta property="article:published_time" content="2019-05-18T17:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-22T15:09:45.768Z">
+<meta property="article:published_time" content="2019-05-19T15:16:46.000Z">
+<meta property="article:modified_time" content="2025-02-02T10:19:04.806Z">
 <meta property="article:author" content="Vincent Zheng">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://ntub46010.github.io/img/post_index/spring-boot.jpg">
@@ -228,7 +228,7 @@
               <p id="updated-time" class="note note-warning" style="">
                 
                   
-                    本文最後更新於：2024-12-22
+                    本文最後更新於：2025-02-02
                   
                 
               </p>
@@ -236,7 +236,7 @@
             
               <div class="markdown-body">
                 
-                <p>若讀者是後端領域的初學者，看完第 2 課後，應該具備 Web API 的概念了，並且也知道前後端會透過 payload 與 HTTP 狀態碼來交換資料。</p>
+                <p>若讀者是後端領域的初學者，看完<a href="/articles/spring-boot-restful-api/" target="_blank">第 2 課</a>後，應該具備 Web API 的概念了，並且也知道前後端會透過 payload 與 HTTP 狀態碼來交換資料。</p>
 <p>本文一開始先簡介知名的 MVC 架構，讓讀者知道 Controller 的由來。接著在 Spring Boot 中撰寫 RESTful API，將相關概念加以活用。最後會完成 4 支 API，分別能進行 CRUD。</p>
 <hr>
 <p>本文的練習用專案，請<a target="_blank" rel="noopener" href="https://github.com/ntub46010/SpringBootTutorial/tree/Ch1">點我</a>。</p>
@@ -244,7 +244,7 @@
 <p>其中 View 屬於畫面的呈現，在前後端分離的系統中，View 這塊就是前端的工作了。</p>
 <p>另外兩項屬於後端。Model 涵蓋資料處理與存取 DB，範圍最廣。至於 Controller 則負責接收請求，呼叫 Model 進行處理，並將結果回傳給 View。</p>
 <p>以生活情境來比喻，就像客人跟櫃台點餐，店員會將菜單送到廚房，之後再將餐點交給我們。此時客人、櫃台店員與廚房，分別為 View、Controller 與 Model。</p>
-<p>Controller 接收的請求，內容包括了第 2 課提到的 query string、payload 與 header。而給予的回應，在本文的實作中，則是將處理結果作為 payload，連同 HTTP 狀態碼一併回傳。</p>
+<p>Controller 接收的請求，內容包括了<a href="/articles/spring-boot-restful-api/" target="_blank">第 2 課</a>提到的 query string、payload 與 header。而給予的回應，在本文的實作中，則是將處理結果作為 payload，連同 HTTP 狀態碼一併回傳。</p>
 <p>若將原本屬於 Model 職責的資料處理寫在 Controller，或是有些 JSP 專案是把程式碼跟 HTML 寫在一起，那系統越做越大，程式碼就會變得臃腫又混亂。MVC 架構的思想，便是讓程式碼分門別類、各司其職。</p>
 <h2 id="二、配置-Controller"><a href="#二、配置-Controller" class="headerlink" title="二、配置 Controller"></a>二、配置 Controller</h2><h3 id="（一）測試資料"><a href="#（一）測試資料" class="headerlink" title="（一）測試資料"></a>（一）測試資料</h3><p>在實作前，讓我們先準備測試資料，這樣後端才有東西可以回傳。</p>
 <p>以下的自訂類別，描述了產品的編號、名稱與價格。</p>
@@ -480,7 +480,7 @@
         aria-expanded="true"
       >
         Spring Boot
-        <span class="list-group-count">(17)</span>
+        <span class="list-group-count">(18)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -530,15 +530,6 @@
     
       
       
-        <a href="/articles/spring-boot-setup-mysql-and-introduce-jpa/" title="【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA</span>
-        </a>
-      
-    
-      
-      
         <a href="/articles/spring-boot-mysql-column-definition-with-jpa/" title="【Spring Boot】第10.2課－使用 JPA 設計實體類別與 MySQL 資料表欄位"
            class="list-group-item list-group-item-action
            ">
@@ -548,10 +539,10 @@
     
       
       
-        <a href="/articles/spring-boot-mongo-repository-customize-query/" title="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式"
+        <a href="/articles/spring-boot-setup-mysql-and-introduce-jpa/" title="【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA"
            class="list-group-item list-group-item-action
            ">
-          <span class="category-post">【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式</span>
+          <span class="category-post">【Spring Boot】第10.1課－準備 MySQL 資料庫與認識 Spring Data JPA</span>
         </a>
       
     
@@ -561,15 +552,6 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">【Spring Boot】第9.2課－使用 Spring Data 存取 MongoDB 資料庫，進行基本 CRUD 操作</span>
-        </a>
-      
-    
-      
-      
-        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
         </a>
       
     
@@ -588,6 +570,33 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mockmvc-integration-test/" title="【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mongo-repository-customize-query/" title="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式</span>
+        </a>
+      
+    
+      
+      
+        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" title="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境</span>
         </a>
       
     

@@ -183,23 +183,23 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" target="_blank">
-          <img src="/img/post_index/spring-boot.jpg" srcset="/img/loading.gif" lazyload alt="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境" style="">
+        <a href="/articles/spring-boot-application-properties-configuration/" target="_blank">
+          <img src="/img/post_index/spring-boot.jpg" srcset="/img/loading.gif" lazyload alt="【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）" style="">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" target="_blank">
-          【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境
+        <a href="/articles/spring-boot-application-properties-configuration/" target="_blank">
+          【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）
         </a>
       </h2>
 
       
-      <a class="index-excerpt " href="/articles/spring-boot-mongodb-introduction-and-setup/" target="_blank">
+      <a class="index-excerpt " href="/articles/spring-boot-application-properties-configuration/" target="_blank">
         <div>
-          後端程式會透過資料庫來儲存與查詢資料。本文將介紹 MongoDB 資料庫，並在 Spring Boot 專案中進行連接。接著介紹基本語法，讓讀者知道 MongoDB 的資料與語法，是以 JSON 格式來表示。由於 JSON 格式可直接與程式物件的資料做對應，因此適合那些希望能靈活調整資料欄位的應用程式。
+          在專案中串接資料庫或第三方服務，通常都需要那些平台的帳密或其他設定值。我們可以將這些設定值集中寫在一個叫「配置檔」的地方，再由程式去引用，以便根據不同環境彈性切換。本文會以使用 Java Mail 寄信為例子，示範如何配置設定值，並利用 Profile 的功能來切換。
         </div>
       </a>
 
@@ -207,7 +207,68 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-07-07 00:00" pubdate>
+            <time datetime="2020-02-19 22:29" pubdate>
+              2020-02-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Spring-Boot/" class="category-chain-item">Spring Boot</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/articles/spring-boot-mockmvc-integration-test/" target="_blank">
+          <img src="/img/post_index/spring-boot.jpg" srcset="/img/loading.gif" lazyload alt="【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試" style="">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/articles/spring-boot-mockmvc-integration-test/" target="_blank">
+          【Spring Boot】第11.1課－使用 MockMvc 進行 API 測試
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/articles/spring-boot-mockmvc-integration-test/" target="_blank">
+        <div>
+          在先前文章的練習中，若要進行測試，都是先啟動程式，再使用 Postman 這項工具呼叫 API，隨後確認結果。但手動測試非常麻煩，因此本文將利用 Spring Boot 提供的 MockMVC，幫助我們以程式化的方式進行測試。
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-07-07 16:53" pubdate>
               2019-07-07
             </time>
           </div>
@@ -244,23 +305,23 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/articles/spring-boot-construct-bean-programmatically/" target="_blank">
-          <img src="/img/post_index/spring-boot.jpg" srcset="/img/loading.gif" lazyload alt="【Spring Boot】第8課－手動進行元件的初始化" style="">
+        <a href="/articles/spring-boot-mongo-repository-customize-query/" target="_blank">
+          <img src="/img/post_index/spring-boot.jpg" srcset="/img/loading.gif" lazyload alt="【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式" style="">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/articles/spring-boot-construct-bean-programmatically/" target="_blank">
-          【Spring Boot】第8課－手動進行元件的初始化
+        <a href="/articles/spring-boot-mongo-repository-customize-query/" target="_blank">
+          【Spring Boot】第9.3課－在 MongoRepository 定義查詢條件與排序方式
         </a>
       </h2>
 
       
-      <a class="index-excerpt " href="/articles/spring-boot-construct-bean-programmatically/" target="_blank">
+      <a class="index-excerpt " href="/articles/spring-boot-mongo-repository-customize-query/" target="_blank">
         <div>
-          我們知道在類別冠上 @Service、@Repository 等注解，就能讓 Spring Boot 建立出元件。但假設我們想讓元件透過 List 或 Map 等成員，來儲存自己的資料或狀態，那該如何對它們進行初始化呢？本文將介紹 @Bean 注解，透過程式碼手動進行元件的建立過程。
+          本文將使用 Spring Data 框架的功能，示範在 MongoRepository 中，透過方法名稱及原生語法，設計自己的的查詢條件。接著說明如何進行排序與分頁。最後簡介 MongoTemplate，藉由動態產生查詢條件，以因應多樣的需求。
         </div>
       </a>
 
@@ -268,7 +329,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-06-23 01:00" pubdate>
+            <time datetime="2019-06-23 16:37" pubdate>
               2019-06-23
             </time>
           </div>
@@ -305,23 +366,23 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/articles/spring-boot-application-properties-configuration/" target="_blank">
-          <img src="/img/post_index/spring-boot.jpg" srcset="/img/loading.gif" lazyload alt="【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）" style="">
+        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" target="_blank">
+          <img src="/img/post_index/spring-boot.jpg" srcset="/img/loading.gif" lazyload alt="【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境" style="">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/articles/spring-boot-application-properties-configuration/" target="_blank">
-          【Spring Boot】第7課－在 application.properties 配置檔提供設定值（以 Java Mail 為例）
+        <a href="/articles/spring-boot-mongodb-introduction-and-setup/" target="_blank">
+          【Spring Boot】第9.1課－MongoDB 介紹與準備資料庫環境
         </a>
       </h2>
 
       
-      <a class="index-excerpt " href="/articles/spring-boot-application-properties-configuration/" target="_blank">
+      <a class="index-excerpt " href="/articles/spring-boot-mongodb-introduction-and-setup/" target="_blank">
         <div>
-          在專案中串接資料庫或第三方服務，通常都需要那些平台的帳密或其他設定值。我們可以將這些設定值集中寫在一個叫「配置檔」的地方，再由程式去引用，以便根據不同環境彈性切換。本文會以使用 Java Mail 寄信為例子，示範如何配置設定值，並利用 Profile 的功能來切換。
+          後端程式會透過資料庫來儲存與查詢資料。本文將介紹 MongoDB 資料庫，並在 Spring Boot 專案中進行連接。接著介紹基本語法，讓讀者知道 MongoDB 的資料與語法，是以 JSON 格式來表示。由於 JSON 格式可直接與程式物件的資料做對應，因此適合那些希望能靈活調整資料欄位的應用程式。
         </div>
       </a>
 
@@ -329,7 +390,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-06-23 00:00" pubdate>
+            <time datetime="2019-06-23 16:33" pubdate>
               2019-06-23
             </time>
           </div>
@@ -390,7 +451,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-06-04 00:00" pubdate>
+            <time datetime="2019-06-04 23:27" pubdate>
               2019-06-04
             </time>
           </div>
@@ -451,7 +512,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-06-03 00:00" pubdate>
+            <time datetime="2019-06-03 00:04" pubdate>
               2019-06-03
             </time>
           </div>
@@ -512,7 +573,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-27 00:00" pubdate>
+            <time datetime="2019-05-27 00:12" pubdate>
               2019-05-27
             </time>
           </div>
@@ -573,7 +634,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-19 01:00" pubdate>
+            <time datetime="2019-05-19 23:16" pubdate>
               2019-05-19
             </time>
           </div>
@@ -634,7 +695,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-19 00:00" pubdate>
+            <time datetime="2019-05-19 23:01" pubdate>
               2019-05-19
             </time>
           </div>
@@ -695,7 +756,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2019-05-14 00:00" pubdate>
+            <time datetime="2019-05-14 00:41" pubdate>
               2019-05-14
             </time>
           </div>
