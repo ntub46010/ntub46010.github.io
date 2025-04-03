@@ -114,6 +114,13 @@
   </url>
   
   <url>
+    <loc>https://ntub46010.github.io/articles/spring-boot-mongodb-introduction-and-setup/</loc>
+    
+    <lastmod>2025-03-22</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://ntub46010.github.io/articles/spring-boot-data-mongodb-repository-crud/</loc>
     
     <lastmod>2025-03-22</lastmod>
@@ -122,13 +129,6 @@
   
   <url>
     <loc>https://ntub46010.github.io/articles/spring-boot-mongo-repository-customize-query/</loc>
-    
-    <lastmod>2025-03-22</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://ntub46010.github.io/articles/spring-boot-mongodb-introduction-and-setup/</loc>
     
     <lastmod>2025-03-22</lastmod>
     
@@ -149,14 +149,14 @@
   </url>
   
   <url>
-    <loc>https://ntub46010.github.io/articles/spring-boot-jpa-one-to-one-relationship/</loc>
+    <loc>https://ntub46010.github.io/articles/spring-boot-mysql-using-jpa-repository/</loc>
     
     <lastmod>2025-03-22</lastmod>
     
   </url>
   
   <url>
-    <loc>https://ntub46010.github.io/articles/spring-boot-mysql-using-jpa-repository/</loc>
+    <loc>https://ntub46010.github.io/articles/spring-boot-jpa-one-to-one-relationship/</loc>
     
     <lastmod>2025-03-22</lastmod>
     
